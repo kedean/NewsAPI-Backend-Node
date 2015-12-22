@@ -1,5 +1,6 @@
 Node Microservice Backend
 ========
+[![Build Status](https://travis-ci.org/kedean/NewsAPI-Backend-Node.svg)](https://travis-ci.org/kedean/NewsAPI-Backend-Node)
 
 This backend implementation uses a series of piped microservices communicating over messages queue to perform it's job.
 
