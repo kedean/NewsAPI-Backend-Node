@@ -7,7 +7,7 @@ exports.handleMessage = function(msg){
   var id = msg.data.toString();
   stories.findById(stories.Status.Pending, id).then(function(story){
     util.setNestedField(story, ['details', 'metadata', 'publishTime'], (new Date()).getTime());
-    util.setNestedField(story, ['details', 'metadata', 'expirationTime'], (new Date()).getTime() + config.storyLifetimeMillis);
+    util.setNestedField(story, ['details', 'metadata', 'expirationTime'], (new Date()).getTime() + config.storyLifetime);
 
     stories.addStory(stories.Status.Published, story.details, id);
     stories.deleteStory(stories.Status.Pending, id);

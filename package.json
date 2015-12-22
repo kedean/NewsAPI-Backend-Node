@@ -15,7 +15,8 @@
     "string":"x.x.x",
     "sinon":"x.x.x",
     "mocha":"x.x.x",
-    "should":"x.x.x"
+    "should":"x.x.x",
+    "minimist":"x.x.x"
   },
   "scripts": {
     "prestart": "npm install",
