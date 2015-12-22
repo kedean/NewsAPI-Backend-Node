@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 //engines
 require('./engines/validation-engine').start(),
 require('./engines/preview-engine').start(),
