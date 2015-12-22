@@ -41,7 +41,7 @@ exports.expirationCheck = function(){
 
 //start up the engine, it'll keep itself going with setTimeout
 exports.start = function(){
-  stories.ready.then(function(){
+  stories.prepDB().then(function(){
     exports.expirationCheck();
     console.log("Archival engine online");
   });

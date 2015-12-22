@@ -25,7 +25,7 @@ exports.handleMessage = function(msg){
 };
 
 exports.start = function(){
-  all(stories.ready, util.prepMQ()).then(function(){
+  all(stories.prepDB(), preview.prepDB(), util.prepMQ()).then(function(){
     util.mqSubscription('story_needs_screenshot', exports.handleMessage);
     console.log("Preview engine online");
   });

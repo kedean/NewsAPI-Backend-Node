@@ -26,7 +26,7 @@ exports.requeueCheck = function(){
 };
 
 exports.start = function(){
-  all(stories.ready, util.prepMQ()).then(function(){
+  all(stories.prepDB(), util.prepMQ()).then(function(){
     util.runPeriodically(exports.requeueCheck, config.requeueInterval);
     console.log("Requeue engine online");
   });

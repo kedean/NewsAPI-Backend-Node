@@ -6,6 +6,8 @@ var stories = require("../routes/stories");
 var requeue = require("../requeue-engine");
 var promise = require("promised-io/promise");
 
+var ready = 'ready';
+
 describe("Requeue Engine", function(){
   describe("#pastDelay", function(){
     config.requeueDelay = 1000;
@@ -59,14 +61,16 @@ describe("Requeue Engine", function(){
     var runStub;
 
     before(function(done){
-      sinon.stub(promise, 'all').withArgs(stories.ready, 'ready').callsArg(0);
-      sinon.stub(util, 'prepMQ').returns('ready');
+      sinon.stub(promise, 'all').withArgs(ready, ready).callsArg(0);
+      sinon.stub(stories, 'prepDB').returns(ready);
+      sinon.stub(util, 'prepMQ').returns(ready);
       runStub = sinon.stub(util, 'runPeriodically').returns();
       done();
     });
 
     after(function(done){
       promise.all.restore();
+      stories.prepDB.restore();
       util.prepMQ.restore();
       util.runPeriodically.restore();
       done();

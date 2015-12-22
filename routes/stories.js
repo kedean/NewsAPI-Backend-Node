@@ -4,17 +4,20 @@ var Deferred = require("promised-io/promise").Deferred;
 var promise = require("promised-io/promise");
 var config = require('../config');
 
-var mongoServer = new Mongo.Server(config.mongoHost, config.mongoPort, {auto_reconnect:true});
-var db = new Mongo.Db(config.mongoDbName, mongoServer);
-var dbPromise = new Deferred();
-db.open(function(err, db){
-  if(!err){
-    console.log("Connected to the 'news-api' database");
-    dbPromise.resolve();
-  }
-});
+var db;
 
-exports.ready = dbPromise.promise
+exports.prepDB = function(){
+  var mongoServer = new Mongo.Server(config.mongoHost, config.mongoPort, {auto_reconnect:true});
+  db = new Mongo.Db(config.mongoDbName, mongoServer);
+  var dbPromise = new Deferred();
+  db.open(function(err, db){
+    if(!err){
+      console.log("Connected to the 'news-api' database");
+      dbPromise.resolve();
+    }
+  });
+  return dbPromise.promise;
+};
 
 var Status = {
   Pending:'PENDING',

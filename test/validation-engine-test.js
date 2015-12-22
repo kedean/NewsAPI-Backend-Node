@@ -6,6 +6,8 @@ var stories = require("../routes/stories");
 var validation = require("../validation-engine");
 var promise = require("promised-io/promise");
 
+var ready = 'ready';
+
 describe("Validation Engine", function(){
   describe("#handleMessage", function(){
     var addStoryWrapper, deleteStoryWrapper, updateStoryWrapper, pubWrapper;
@@ -71,14 +73,16 @@ describe("Validation Engine", function(){
     var subStub;
 
     before(function(done){
-      sinon.stub(promise, 'all').withArgs(stories.ready, 'ready').callsArg(0);
-      sinon.stub(util, 'prepMQ').returns('ready');
+      sinon.stub(promise, 'all').withArgs(ready, ready).callsArg(0);
+      sinon.stub(stories, 'prepDB').returns(ready);
+      sinon.stub(util, 'prepMQ').returns(ready);
       subStub = sinon.stub(util, 'mqSubscription').returns();
       done();
     });
 
     after(function(done){
       promise.all.restore();
+      stories.prepDB.restore();
       util.prepMQ.restore();
       util.mqSubscription.restore();
       done();

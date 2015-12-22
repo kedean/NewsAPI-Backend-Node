@@ -7,6 +7,8 @@ var previews = require("../routes/previews");
 var screenshot = require("../preview-engine");
 var promise = require("promised-io/promise");
 
+var ready = 'ready';
+
 describe("Preview Engine", function(){
   describe("#handleMessage", function(){
     var addPreviewWrapper, updateStoryWrapper, pubWrapper;
@@ -60,14 +62,18 @@ describe("Preview Engine", function(){
     var subStub;
 
     before(function(done){
-      sinon.stub(promise, 'all').withArgs(stories.ready, 'ready').callsArg(0);
-      sinon.stub(util, 'prepMQ').returns('ready');
+      sinon.stub(promise, 'all').withArgs(ready, ready, ready).callsArg(0);
+      sinon.stub(util, 'prepMQ').returns(ready);
+      sinon.stub(stories, 'prepDB').returns(ready);
+      sinon.stub(previews, 'prepDB').returns(ready);
       subStub = sinon.stub(util, 'mqSubscription').returns();
       done();
     });
 
     after(function(done){
       promise.all.restore();
+      stories.prepDB.restore();
+      previews.prepDB.restore();
       util.prepMQ.restore();
       util.mqSubscription.restore();
       done();

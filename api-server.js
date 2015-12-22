@@ -60,7 +60,7 @@ app
     });
   });
 
-promise.all(util.prepMQ(), stories.ready, preview.ready).then(function(){
+promise.all(util.prepMQ(), stories.prepDB(), preview.prepDB()).then(function(){
   app.listen(8080);
   console.log("Listening on port 8080...");
 });
