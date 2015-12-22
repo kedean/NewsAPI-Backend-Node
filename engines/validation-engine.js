@@ -1,7 +1,7 @@
-var stories = require("./routes/stories.js"),
+var stories = require("../routes/stories.js"),
     string = require("string"),
     all = require("promised-io/promise").all,
-    util = require("./util");
+    util = require("../util/util");
 
 exports.normalizeLink = function(link){
   if(!string(link).startsWith('http://') && !string(link).startsWith('https://')){

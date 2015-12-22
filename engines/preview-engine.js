@@ -1,8 +1,8 @@
-var stories = require("./routes/stories.js"),
-    preview = require('./routes/previews'),
+var stories = require("../routes/stories.js"),
+    preview = require('../routes/previews'),
     all = require("promised-io/promise").all,
     BufferBuilder = require('buffer-builder'),
-    util = require("./util");
+    util = require("../util/util");
 
 exports.handleMessage = function(msg){
   var id = msg.data.toString();

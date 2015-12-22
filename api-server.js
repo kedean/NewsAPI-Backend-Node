@@ -4,8 +4,8 @@ var express = require('express'),
     cors = require('cors'),
     promise = require("promised-io/promise"),
     amqp = require("amqp"),
-    util = require('./util'),
-    config = require('./config');
+    util = require('./util/util'),
+    config = require('./util/config');
 
 var app = express();
 

@@ -1,5 +1,5 @@
-var config = require("./config"),
-    stories = require("./routes/stories.js"),
+var config = require("../util/config"),
+    stories = require("../routes/stories.js"),
     promise = require("promised-io/promise");
 
 exports.expirationCheck = function(){

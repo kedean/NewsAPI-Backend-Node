@@ -1,9 +1,9 @@
 var sinon = require("sinon");
-var config = require("../config");
+var config = require("../util/config");
 var should = require("should");
-var util = require("../util");
+var util = require("../util/util");
 var stories = require("../routes/stories");
-var publish = require("../publication-engine");
+var publish = require("../engines/publication-engine");
 var promise = require("promised-io/promise");
 
 var ready = 'ready';

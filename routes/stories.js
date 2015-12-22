@@ -2,7 +2,7 @@ var Mongo = require('mongodb');
 var UUID = require('node-uuid');
 var Deferred = require("promised-io/promise").Deferred;
 var promise = require("promised-io/promise");
-var config = require('../config');
+var config = require('../util/config');
 
 var db;
 

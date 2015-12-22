@@ -1,10 +1,10 @@
 var sinon = require("sinon");
-var config = require("../config");
+var config = require("../util/config");
 var should = require("should");
-var util = require("../util");
+var util = require("../util/util");
 var stories = require("../routes/stories");
 var previews = require("../routes/previews");
-var screenshot = require("../preview-engine");
+var screenshot = require("../engines/preview-engine");
 var promise = require("promised-io/promise");
 
 var ready = 'ready';

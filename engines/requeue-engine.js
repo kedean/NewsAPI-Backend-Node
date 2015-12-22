@@ -1,8 +1,8 @@
-var stories = require("./routes/stories.js"),
+var stories = require("../routes/stories.js"),
     string = require("string"),
-    config = require("./config"),
+    config = require("../util/config"),
     all = require("promised-io/promise").all,
-    util = require("./util");
+    util = require("../util/util");
 
 exports.pastDelay = function(baseTime){
   return (typeof baseTime == 'number') && ((new Date()).getTime() - baseTime) > config.requeueDelay;

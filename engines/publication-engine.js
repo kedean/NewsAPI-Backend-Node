@@ -1,7 +1,7 @@
-var util = require("./util"),
-    config = require("./config"),
+var util = require("../util/util"),
+    config = require("../util/config"),
     all = require("promised-io/promise").all,
-    stories = require("./routes/stories.js");
+    stories = require("../routes/stories.js");
 
 exports.handleMessage = function(msg){
   var id = msg.data.toString();

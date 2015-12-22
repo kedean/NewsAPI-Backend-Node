@@ -1,6 +1,6 @@
 var Mongo = require('mongodb');
 var Deferred = require("promised-io/promise").Deferred;
-var config = require('../config');
+var config = require('../util/config');
 
 var collectionName = 'screenshot';
 
