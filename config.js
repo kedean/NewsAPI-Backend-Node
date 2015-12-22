@@ -1,5 +1,5 @@
 exports.mqUrl = 'amqp://guest:guest@localhost:5672';
-exports.mongoHost = '10.21.0.218';
+exports.mongoHost = 'localhost';
 exports.mongoPort = 27017;
 exports.mongoDbName = 'news-api';
 
