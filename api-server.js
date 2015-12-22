@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var express = require('express'),
     stories = require('./routes/stories'),
     preview = require('./routes/previews'),
