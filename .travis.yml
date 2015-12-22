@@ -1,0 +1,3 @@
+language: javascript
+sudo: false
+script: npm test
