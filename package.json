@@ -16,7 +16,8 @@
     "sinon":"x.x.x",
     "mocha":"x.x.x",
     "should":"x.x.x",
-    "minimist":"x.x.x"
+    "minimist":"x.x.x",
+    "body-parser":"x.x.x"
   },
   "scripts": {
     "prestart": "npm install",

@@ -58,9 +58,10 @@ exports.setNestedField = function(target, levels, value){
  */
 exports.runPeriodically = function(callback, interval){
   var callIt = function(){
-    promise.when(callback(), function(){
+    var requeue = function(){
       setTimeout(callIt, interval);
-    });
+    };
+    callback().then(requeue, requeue);
   };
 
   callIt();

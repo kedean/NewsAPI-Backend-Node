@@ -4,10 +4,10 @@ var Deferred = require("promised-io/promise").Deferred;
 var promise = require("promised-io/promise");
 var config = require('../util/config');
 
-var db;
+var db, mongoServer;
 
 exports.prepDB = function(){
-  var mongoServer = new Mongo.Server(config.mongoHost, config.mongoPort, {auto_reconnect:true});
+  mongoServer = new Mongo.Server(config.mongoHost, config.mongoPort, {auto_reconnect:true});
   db = new Mongo.Db(config.mongoDbName, mongoServer);
   var dbPromise = new Deferred();
   db.open(function(err, db){
@@ -67,12 +67,12 @@ exports.findAll = function(collectionName){
   var result = new Deferred();
   db.collection(collectionName.toLowerCase(), function(err, collection){
     if(err || collection == null){
-      console.log(err);
+      console.trace(err);
       result.reject({'error':'An error has occurred'});
     } else{
       collection.find().toArray(function(err, items){
         if(err || items == null){
-          console.log(err);
+          console.trace(err);
           result.reject({'error':'Could not find any stories'});
         } else{
           items = items.map(function(item){
@@ -117,7 +117,7 @@ exports.findById = function(collections, id){
     if(searches.length == 0){
       result.reject({'error':'Could not find story with id ' + id});
     } else if(searches.length > 1){
-      console.error("Multiple items found with id " + id);
+      console.trace("Multiple items found with id " + id);
       result.reject({'error':'Internal Server Error'});
     } else{
       result.resolve(searches[0]);
@@ -131,12 +131,14 @@ exports.findExpired = function(cutoff){
   var result = new Deferred();
   db.collection(Status.Published.toLowerCase(), function(err, collection){
     if(err || collection == null){
-      console.log(err);
+      console.trace(err);
       result.reject({'error':'An error has occurred'});
     } else{
-      collection.find({'details.metadata.expirationTime': {$lt: cutoff}}).toArray(function(err, items){
+      collection.find({'details.metadata.expirationTime': {'$lt': cutoff}}).toArray(function(err, items){
         if(err || items == null){
-          console.log(err);
+          if(err){
+            console.trace(err);
+          }
           result.reject({'error':'Could not find any stories'});
         } else{
           items = items.map(function(item){
@@ -162,7 +164,7 @@ exports.addStory = function(collectionName, story, id){
       {safe:true},
       function(err, response){
         if(err){
-          console.error(err);
+          console.trace(err);
           result.reject({'error':'An error has occurred'});
         } else{
           result.resolve(new IngestionStatus(id, Status.Pending));
@@ -185,7 +187,7 @@ exports.updateStory = function(collectionName, story){
       {safe:true},
       function(err, response){
         if(err){
-          console.error(err);
+          console.trace(err);
           result.reject({'error':'An error has occurred'});
         } else{
           result.resolve(new IngestionStatus(story.id, Status.Pending));
@@ -203,11 +205,11 @@ exports.deleteStory = function(collectionName, id){
   db.collection(collectionName.toLowerCase(), function(err, collection){
     if(err || collection == null){
       result.reject({'error':'An error has occurred'});
-      console.error(err);
+      console.trace(err);
     } else{
       collection.remove({'_id':id}, {safe:true}, function(err, response){
         if(err){
-          console.error(err);
+          console.trace(err);
           result.reject({'error':'Could not delete story with id ' + id});
         } else{
           result.resolve();

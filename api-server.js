@@ -5,17 +5,14 @@ var express = require('express'),
     preview = require('./routes/previews'),
     cors = require('cors'),
     promise = require("promised-io/promise"),
-    amqp = require("amqp"),
     util = require('./util/util'),
-    config = require('./util/config');
+    bodyParser = require('body-parser');
 
 var app = express();
 
-app.configure(function(){
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(cors());
-});
+app.use(express.logger('dev'));
+app.use(bodyParser.json());
+app.use(cors());
 
 app
   .get('/news/stories', function(req, res){
@@ -53,11 +50,11 @@ app
         res.set('Content-Length', screenshot.data.buffer.length);
         res.send(screenshot.data.buffer);
       }, function(error){
-        console.log("Can't find preview for url " + story.details.link);
+        console.trace("Can't find preview for url " + story.details.link);
         res.status(404).end();
       });
     }, function(error){
-      console.log("Can't find story with id " + req.params.id);
+      console.trace("Can't find story with id " + req.params.id);
       res.status(404).end();
     });
   });

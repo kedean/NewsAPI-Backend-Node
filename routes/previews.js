@@ -51,7 +51,7 @@ exports.addPreview = function(link, imageData){
       {safe:true},
       function(err, response){
         if(err){
-          console.error(err);
+          console.trace(err);
           result.reject({'error':'Error generating preview'});
         } else{
           result.resolve();
