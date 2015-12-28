@@ -8,7 +8,7 @@ var db;
 
 exports.prepDB = function(){
   var mongoServer = new Mongo.Server(config.mongoHost, config.mongoPort, {auto_reconnect:true});
-  db = new Mongo.Db(config.mongoDbName, mongoServer);
+  db = new Mongo.Db(config.mongoDbName, mongoServer, {'promiseLibrary':Promise});
 
   return util.repeatingMongoConnection(db);
 };
@@ -64,16 +64,14 @@ exports.findAll = function(collectionName){
         console.trace(err);
         reject({'error':'An error has occurred'});
       } else{
-        collection.find().toArray(function(err, items){
-          if(err || items == null){
-            console.trace(err);
-            reject({'error':'Could not find any stories'});
-          } else{
-            items = items.map(function(item){
-              return new IngestedStory(item._id, item.details);
-            })
-            resolve(items);
-          }
+        collection.find().toArray().then(function(items){
+          items = items.map(function(item){
+            return new IngestedStory(item._id, item.details);
+          })
+          resolve(items);
+        }).catch(function(err){
+          console.trace(err);
+          reject({'error':'Could not find any stories'});
         });
       }
     });
