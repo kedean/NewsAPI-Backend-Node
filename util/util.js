@@ -12,7 +12,10 @@ exports.prepMQ = function(){
       var tryConnect = function(){
         console.log("Attempting to connect to message broker");
         mq = amqp.createConnection({url:config.mqUrl}, {'defaultExchangeName':''})
-          .on('ready', resolve);
+          .on('ready', function(){
+            console.log("Connected to message broker");
+            resolve();
+          });
       };
 
       tryConnect();
