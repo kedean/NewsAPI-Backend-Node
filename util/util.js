@@ -4,20 +4,22 @@ var Promise = require('bluebird');
 var webshot = require("webshot");
 
 // Message queuing helpers
-var mq;
+var mq, mqReady;
 
 exports.prepMQ = function(){
-  return new Promise(function(resolve, reject){
-    if(!mq){
-      mq = amqp.createConnection({url:config.mqUrl}, {'defaultExchangeName':''}).on('ready', resolve);
-    } else{
-      if(mq.readyEmitted){
-        resolve();
-      } else{
-        mq.on('ready', resolve);
-      }
-    }
-  });
+  if(!mqReady){
+    mqReady = new Promise(function(resolve, reject){
+      var tryConnect = function(){
+        console.log("Attempting to connect to message broker");
+        mq = amqp.createConnection({url:config.mqUrl}, {'defaultExchangeName':''})
+          .on('ready', resolve);
+      };
+
+      tryConnect();
+    });
+  }
+
+  return mqReady;
 }
 
 exports.mqSubscription = function(queueName, callback){
