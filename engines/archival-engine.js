@@ -3,6 +3,24 @@ var config = require("../util/config"),
     Promise = require("bluebird"),
     util = require("../util/util");
 
+exports.archiveStory = function(story){
+  return new Promise(function(resolve, reject){
+    stories.addStory(stories.Status.Archived, story.details, story.id).then(
+      function(){
+        stories.deleteStory(stories.Status.Published, story.id).then(function(){
+          resolve();
+        }, function(err){
+          console.trace(err);
+          reject();
+        });
+      }, function(err){
+        console.trace(err);
+        reject();
+      }
+    );
+  });
+};
+
 exports.expirationCheck = function(){
   // TODO: callback hell! Is there a better way to organize this?
   return new Promise(function(resolve, reject){
@@ -10,23 +28,7 @@ exports.expirationCheck = function(){
       var archivalProcesses = [];
       expired.forEach(function(story){
         console.log("Archiving story with id " + story.id);
-        archivalProcesses.push(
-          new Promise(function(resolve, reject){
-            stories.addStory(stories.Status.Archived, story.details, story.id).then(
-              function(){
-                stories.deleteStory(stories.Status.Published, story.id).then(function(){
-                  resolve();
-                }, function(err){
-                  console.trace(err);
-                  reject();
-                });
-              }, function(err){
-                console.trace(err);
-                reject();
-              }
-            );
-          })
-        );
+        archivalProcesses.push(exports.archiveStory(story));
       });
 
       if(archivalProcesses.length > 0){
