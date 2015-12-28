@@ -1,6 +1,6 @@
 var stories = require("../routes/stories.js"),
     string = require("string"),
-    all = require("promised-io/promise").all,
+    Promise = require('bluebird'),
     util = require("../util/util");
 
 exports.normalizeLink = function(link){
@@ -57,7 +57,7 @@ exports.handleMessage = function(msg){
 };
 
 exports.start = function(){
-  all(stories.prepDB(), util.prepMQ()).then(function(){
+  Promise.all([stories.prepDB(), util.prepMQ()]).then(function(){
     util.mqSubscription('story_needs_validation', exports.handleMessage);
     console.log("Validation engine online");
   });

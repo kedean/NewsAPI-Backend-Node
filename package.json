@@ -9,7 +9,6 @@
     "node-uuid":"x.x.x",
     "cors":"x.x.x",
     "amqp":"x.x.x",
-    "promised-io":"x.x.x",
     "webshot":"x.x.x",
     "buffer-builder":"x.x.x",
     "string":"x.x.x",
@@ -17,7 +16,8 @@
     "mocha":"x.x.x",
     "should":"x.x.x",
     "minimist":"x.x.x",
-    "body-parser":"x.x.x"
+    "body-parser":"x.x.x",
+    "bluebird":"x.x.x"
   },
   "scripts": {
     "prestart": "npm install",

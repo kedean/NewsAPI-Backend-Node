@@ -1,6 +1,6 @@
 var stories = require("../routes/stories.js"),
     preview = require('../routes/previews'),
-    all = require("promised-io/promise").all,
+    Promise = require('bluebird');
     BufferBuilder = require('buffer-builder'),
     util = require("../util/util");
 
@@ -25,7 +25,7 @@ exports.handleMessage = function(msg){
 };
 
 exports.start = function(){
-  all(stories.prepDB(), preview.prepDB(), util.prepMQ()).then(function(){
+  Promise.all([stories.prepDB(), preview.prepDB(), util.prepMQ()]).then(function(){
     util.mqSubscription('story_needs_screenshot', exports.handleMessage);
     console.log("Preview engine online");
   });

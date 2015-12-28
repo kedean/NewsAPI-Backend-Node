@@ -4,7 +4,7 @@ var should = require("should");
 var util = require("../util/util");
 var stories = require("../routes/stories");
 var publish = require("../engines/publication-engine");
-var promise = require("promised-io/promise");
+var Promise = require('bluebird');
 
 var ready = 'ready';
 
@@ -46,7 +46,7 @@ describe("Publication Engine", function(){
     var subStub;
 
     before(function(done){
-      sinon.stub(promise, 'all').withArgs(ready, ready).callsArg(0);
+      sinon.stub(Promise, 'all').withArgs([ready, ready]).returns({"then":function(c){c();}});
       sinon.stub(stories, 'prepDB').returns(ready);
       sinon.stub(util, 'prepMQ').returns(ready);
       subStub = sinon.stub(util, 'mqSubscription').returns();
@@ -54,7 +54,7 @@ describe("Publication Engine", function(){
     });
 
     after(function(done){
-      promise.all.restore();
+      Promise.all.restore();
       stories.prepDB.restore();
       util.prepMQ.restore();
       util.mqSubscription.restore();

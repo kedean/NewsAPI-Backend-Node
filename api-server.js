@@ -4,7 +4,7 @@ var express = require('express'),
     stories = require('./routes/stories'),
     preview = require('./routes/previews'),
     cors = require('cors'),
-    promise = require("promised-io/promise"),
+    Promise = require('bluebird'),
     util = require('./util/util'),
     bodyParser = require('body-parser');
 
@@ -59,7 +59,7 @@ app
     });
   });
 
-promise.all(util.prepMQ(), stories.prepDB(), preview.prepDB()).then(function(){
+Promise.all([util.prepMQ(), stories.prepDB(), preview.prepDB()]).then(function(){
   app.listen(8080);
   console.log("Listening on port 8080...");
 });

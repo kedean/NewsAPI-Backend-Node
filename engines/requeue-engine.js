@@ -1,7 +1,7 @@
 var stories = require("../routes/stories.js"),
     string = require("string"),
     config = require("../util/config"),
-    all = require("promised-io/promise").all,
+    Promise = require('bluebird'),
     util = require("../util/util");
 
 exports.pastDelay = function(baseTime){
@@ -26,7 +26,7 @@ exports.requeueCheck = function(){
 };
 
 exports.start = function(){
-  all(stories.prepDB(), util.prepMQ()).then(function(){
+  Promise.all([stories.prepDB(), util.prepMQ()]).then(function(){
     util.runPeriodically(exports.requeueCheck, config.requeueInterval);
     console.log("Requeue engine online");
   });

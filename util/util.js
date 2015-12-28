@@ -1,23 +1,23 @@
 var config = require("./config");
 var amqp = require("amqp");
-var promise = require("promised-io/promise");
+var Promise = require('bluebird');
 var webshot = require("webshot");
 
 // Message queuing helpers
 var mq;
 
 exports.prepMQ = function(){
-  var result = new promise.Deferred();
-  if(!mq){
-    mq = amqp.createConnection({url:config.mqUrl}, {'defaultExchangeName':''}).on('ready', result.resolve);
-  } else{
-    if(mq.readyEmitted){
-      result.resolve();
+  return new Promise(function(resolve, reject){
+    if(!mq){
+      mq = amqp.createConnection({url:config.mqUrl}, {'defaultExchangeName':''}).on('ready', resolve);
     } else{
-      mq.on('ready', result.resolve);
+      if(mq.readyEmitted){
+        resolve();
+      } else{
+        mq.on('ready', resolve);
+      }
     }
-  }
-  return result.promise;
+  });
 }
 
 exports.mqSubscription = function(queueName, callback){
@@ -71,3 +71,24 @@ exports.runPeriodically = function(callback, interval){
  * Exposes webshot in a way that lets unit tests mock it
  */
 exports.screenshot = webshot;
+
+
+exports.repeatingMongoConnection = function(db){
+  return new Promise(function(resolve, reject){
+    var tryConnect = function(){
+      db.open(function(err, db){
+        console.log("Attempting to connect to MongoDB on " + config.mongoDbName);
+        if(!err){
+          console.log("Connected to MongoDB on " + config.mongoDbName);
+          resolve();
+        } else{
+          console.trace(err);
+          console.error("Failed to connect to MongoDB on " + config.mongoDbName + ", trying again in " + config.mongoRetryTime + " milliseconds");
+          setTimeout(tryConnect, config.mongoRetryTime);
+        }
+      });
+    };
+
+    tryConnect();
+  });
+}

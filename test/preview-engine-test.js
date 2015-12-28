@@ -5,7 +5,7 @@ var util = require("../util/util");
 var stories = require("../routes/stories");
 var previews = require("../routes/previews");
 var screenshot = require("../engines/preview-engine");
-var promise = require("promised-io/promise");
+var Promise = require('bluebird');
 
 var ready = 'ready';
 
@@ -62,7 +62,7 @@ describe("Preview Engine", function(){
     var subStub;
 
     before(function(done){
-      sinon.stub(promise, 'all').withArgs(ready, ready, ready).callsArg(0);
+      sinon.stub(Promise, 'all').withArgs([ready, ready, ready]).returns({"then":function(c){c();}});
       sinon.stub(util, 'prepMQ').returns(ready);
       sinon.stub(stories, 'prepDB').returns(ready);
       sinon.stub(previews, 'prepDB').returns(ready);
@@ -71,7 +71,7 @@ describe("Preview Engine", function(){
     });
 
     after(function(done){
-      promise.all.restore();
+      Promise.all.restore();
       stories.prepDB.restore();
       previews.prepDB.restore();
       util.prepMQ.restore();

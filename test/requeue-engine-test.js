@@ -4,7 +4,7 @@ var should = require("should");
 var util = require("../util/util");
 var stories = require("../routes/stories");
 var requeue = require("../engines/requeue-engine");
-var promise = require("promised-io/promise");
+var Promise = require('bluebird');
 
 var ready = 'ready';
 
@@ -61,7 +61,7 @@ describe("Requeue Engine", function(){
     var runStub;
 
     before(function(done){
-      sinon.stub(promise, 'all').withArgs(ready, ready).callsArg(0);
+      sinon.stub(Promise, 'all').withArgs([ready, ready]).returns({"then":function(c){c();}});
       sinon.stub(stories, 'prepDB').returns(ready);
       sinon.stub(util, 'prepMQ').returns(ready);
       runStub = sinon.stub(util, 'runPeriodically').returns();
@@ -69,7 +69,7 @@ describe("Requeue Engine", function(){
     });
 
     after(function(done){
-      promise.all.restore();
+      Promise.all.restore();
       stories.prepDB.restore();
       util.prepMQ.restore();
       util.runPeriodically.restore();

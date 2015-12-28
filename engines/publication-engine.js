@@ -1,6 +1,6 @@
 var util = require("../util/util"),
     config = require("../util/config"),
-    all = require("promised-io/promise").all,
+    Promise = require('bluebird'),
     stories = require("../routes/stories.js");
 
 exports.handleMessage = function(msg){
@@ -17,7 +17,7 @@ exports.handleMessage = function(msg){
 };
 
 exports.start = function(){
-  all(stories.prepDB(), util.prepMQ()).then(function(){
+  Promise.all([stories.prepDB(), util.prepMQ()]).then(function(){
     util.mqSubscription('story_needs_publication', exports.handleMessage);
     console.log("Publication engine online");
   });
