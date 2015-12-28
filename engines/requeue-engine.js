@@ -17,7 +17,7 @@ exports.requeueCheck = function(){
       if(exports.pastDelay(metadata.previewStartTime)){ // the issue occurred while generating a preview
         console.log("Requeueing story with id " + story.id + " for preview");
         util.mqPublish('story_needs_screenshot', story.id);
-      } else if(exports.pastDelay(metadata.validationStartTime)){ // issue happened while validating
+      } else { // issue happened while validating or we don't know what happened
         console.log("Requeueing story with id " + story.id + " for validation");
         util.mqPublish('story_needs_validation', story.id);
       }
