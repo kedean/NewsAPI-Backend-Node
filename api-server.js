@@ -36,7 +36,7 @@ app
     stories.findById([stories.Status.Pending, stories.Status.Published, stories.Status.Rejected], req.params.id).then(function(item){
       if(item.status == stories.Status.Pending){
         res.status(202);
-        res.send(item);
+        res.send(routes.buildStory(req, item));
       } else if(item.status == stories.Status.Published){
         res.redirect(301, util.buildUrl(req, '/news/stories/published/' + item.id));
       } else if(item.status == stories.Status.Rejected){
@@ -54,7 +54,7 @@ app
   .get('/news/stories/published/:id', function(req, res){
     stories.findById(stories.Status.Published, req.params.id).then(function(item){
       res.status(200);
-      res.send(item);
+      res.send(routes.buildStory(req, item));
     }, function(error){
       res.status(404);
       res.send(error);
@@ -63,7 +63,7 @@ app
   .get('/news/stories/rejected/:id', function(req, res){
     stories.findById(stories.Status.Rejected, req.params.id).then(function(item){
       res.status(422);
-      res.send(item);
+      res.send(routes.buildStory(req, item));
     }, function(error){
       res.status(404);
       res.send(error);

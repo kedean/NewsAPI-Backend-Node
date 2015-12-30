@@ -85,3 +85,23 @@ exports.buildListing = function(req, listingType, stories){
     }
   }
 }
+
+/**
+ * Outputs a HATEOAS/HAL-compliant resource for the given story
+ * @param req the request that generated this call
+ * @param story the story to wrap, this will be modified in place for performance reasons, so it should be cloned before passing if needed
+ * @returns a JSON representation of the listing
+ */
+exports.buildStory = function(req, story){
+  var status = Status.fromString(story.status);
+
+  story['_links'] = {
+    'self':util.buildUrl(req, req.originalUrl)
+  };
+
+  if(status == Status.Published){
+    story['_links']['preview'] = util.buildUrl(req, '/news/previews/' + story.id + '.png');
+  }
+
+  return story;
+}
