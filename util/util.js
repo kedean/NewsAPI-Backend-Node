@@ -2,6 +2,7 @@ var config = require("./config");
 var amqp = require("amqp");
 var Promise = require('bluebird');
 var webshot = require("webshot");
+var url = require("url");
 
 // Message queuing helpers
 var mq, mqReady;
@@ -95,5 +96,16 @@ exports.repeatingMongoConnection = function(db){
     };
 
     tryConnect();
+  });
+}
+
+/*
+ * Constructs a url relative to an Express request
+ */
+exports.buildUrl = function(req, path){
+  return url.format({
+    protocol: req.protocol,
+    host: req.get('host'),
+    pathname: path
   });
 }

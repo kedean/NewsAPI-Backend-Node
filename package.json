@@ -4,7 +4,8 @@
   "version":"0.0.1",
   "private":true,
   "dependencies":{
-    "express":"3.x",
+    "express":"4.x",
+    "morgan":"x.x.x",
     "mongodb":"x.x.x",
     "node-uuid":"x.x.x",
     "cors":"x.x.x",
@@ -17,7 +18,8 @@
     "should":"x.x.x",
     "minimist":"x.x.x",
     "body-parser":"x.x.x",
-    "bluebird":"x.x.x"
+    "bluebird":"x.x.x",
+    "url":"x.x.x"
   },
   "scripts": {
     "prestart": "npm install",
