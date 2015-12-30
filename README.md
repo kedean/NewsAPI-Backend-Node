@@ -2,6 +2,8 @@ Node Microservice Backend
 ========
 [![Build Status](https://travis-ci.org/kedean/NewsAPI-Backend-Node.svg)](https://travis-ci.org/kedean/NewsAPI-Backend-Node)
 
+See the [API Spec](./api-spec.md) for more information.
+
 This backend implementation uses a series of piped microservices communicating over messages queue to perform it's job.
 
 ```api-server.js``` is the main server that intercepts posts and gets to the API. New data is placed in MongoDB and a message is passed off to the validator.
