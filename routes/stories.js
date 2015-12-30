@@ -3,6 +3,7 @@ var UUID = require('node-uuid');
 var Promise = require("bluebird");
 var config = require('../util/config');
 var util = require("../util/util");
+var routes = require("./routes")
 
 var db;
 
@@ -13,28 +14,7 @@ exports.prepDB = function(){
   return util.repeatingMongoConnection(db);
 };
 
-var Status = {
-  Pending:'PENDING',
-  Rejected:'REJECTED',
-  Published:'PUBLISHED',
-  Archived:'ARCHIVED',
-  fromString:function(name){
-    name = name.toLowerCase();
-    if(name == 'pending'){
-      return this.Pending;
-    } else if(name == 'rejected'){
-      return this.Rejected;
-    } else if(name == 'published'){
-      return this.Published;
-    } else if(name == 'archived'){
-      return this.Archived;
-    } else{
-      throw "Unknown status name";
-    }
-  }
-};
-
-exports.Status = Status;
+exports.Status = routes.Status;
 
 var IngestedStory = function(id, story, status){
   this.id = id;
@@ -42,9 +22,12 @@ var IngestedStory = function(id, story, status){
   this.details = {
     'headline':story.headline,
     'link':story.link,
-    'note':story.note,
     'metadata':story.metadata || {ingestionTime:new Date().getTime()}
   };
+
+  if(story.note){ //note is optional
+    this.details.note = story.note;
+  }
 };
 
 var MongoStory = function(ingested){
@@ -96,7 +79,7 @@ exports.findById = function(collections, id){
                 reject({'error':'Could not find story with id ' + id});
               } else{
                 var out = new IngestedStory(item._id, item.details);
-                out.status = Status.fromString(collectionName);
+                out.status = routes.Status.fromString(collectionName);
                 resolve(out);
               }
             });
@@ -108,7 +91,7 @@ exports.findById = function(collections, id){
 
 exports.findExpired = function(cutoff){
   return new Promise(function(resolve, reject){
-    db.collection(Status.Published.toLowerCase(), function(err, collection){
+    db.collection(routes.Status.Published.toLowerCase(), function(err, collection){
       if(err || collection == null){
         console.trace(err);
         reject({'error':'An error has occurred'});
@@ -145,7 +128,7 @@ exports.addStory = function(collectionName, story, id){
             console.trace(err);
             reject({'error':'An error has occurred'});
           } else{
-            resolve(new IngestionStatus(id, Status.Pending));
+            resolve(new IngestionStatus(id, routes.Status.Pending));
           }
         }
       );
@@ -166,7 +149,7 @@ exports.updateStory = function(collectionName, story){
             console.trace(err);
             rest.reject({'error':'An error has occurred'});
           } else{
-            resolve(new IngestionStatus(story.id, Status.Pending));
+            resolve(new IngestionStatus(story.id, routes.Status.Pending));
           }
         }
       );

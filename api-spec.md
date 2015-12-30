@@ -1,7 +1,12 @@
 News API Specification
 =========
 
+##Introduction
+The News API is a [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS#cite_note-Jersey_and_HATEOAS-6) and [HAL](http://stateless.co/hal_specification.html) compliant api for posting and fetching news stories.
+
 ##Resources and responses
+
+###GETtable Resources
 
 - /news/ is the landing point, and should contain hyperlinks to previews and stories
 ```
@@ -76,7 +81,12 @@ News API Specification
 
   - Preview resources are images, and may be any image format, although PNG is suggested. The response should use the correct Content-Type headers. The only way to discover a preview resource is through the story resources links, so each preview only needs to be served as long as the corresponding story is served. If the story it corresponds to is expired, then this should return a ```410 GONE``` and no binary data. If a story is pending or rejected, or never existed, then there should be no preview and a ```404 NOT FOUND``` should be returned. The preview should be an image representation of the URL stored in the corresponding stories ```link``` field. The image dimensions should be at least 300px wide and 150px tall, and a 16:9 aspect ratio is preferable. The process for generating the image is up to the server, and there is no requirement that the image be immutable (this means that the server could store one image for multiple stories that use the same link, and update each time a new one is submitted)
 
+###POSTable resources
 - /news/stories/pending accepts POST requests with new stories. They should be in some acceptable format. Once the story has been queued up for processing, this should always return a ```201 CREATED``` and a Location header directing the client to the newly created pending story page. For example, if the story was assigned an id of '5', the client should receive a ```Location: /news/stories/pending/5``` header. Once the POST is complete, the client may check the status of the story by sending a HEAD request to the returned location. When the story has been processed, it will stop returning the 202 status and instead return a 301 redirect to inform the client of the final status. If the final response code is 422, it was rejected, if it is 200 then it was published successfully. Any and all issues with a submitted story should be reported via the note field of a rejected story.
+
+###Other resources
+- *No other resources should accept POST, PUT, or DELETE requests*
+- HEAD and OPTIONS requests should work on all resources
 
 ##Caching
 Caching is optional, and generally up to the server to decide on. There are a few restrictions:
